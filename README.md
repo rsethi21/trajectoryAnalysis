@@ -1,16 +1,15 @@
 # trajectoryAnalysis
-Original trajectory data are available in 
- /home/pkekeneshuskey/data/molecular_dynamics/ph_binsun
- (from Bin Sun)
 
-## Information about trajectory
-- Currently simulates mitochondrial IDP Q...
+## information about trajectory
+- Original trajectory data are available in /home/pkekeneshuskey/data/molecular_dynamics/ph_binsun (from Bin Sun)
+- Currently simulates mitochondrial IDP URQCH
 - Has 100 copies and between 6-800 frames of protein movement simulated at pH 3, 7
 - pH 3 is assumed to be unfolded and pH 7 is assumed to be folded
 - ""_all.pdb includes ions/water
 - ""_protein.pdb includes proteins only
 
 ## scripts under tools folder
+
 ### processSeries.py
 - Currently will output time series Radgyr, RMSF, WaterShell, IonShell from pytraj utilities
 
@@ -22,3 +21,9 @@ Original trajectory data are available in
 
 ## side notes
 - needed to install pytraj from source since its setup.py was not functioning in any version of python3
+
+## pending steps
+- standardize scripts with argparse
+- collect clustering statistics
+- determine significantly different analysis between the folded classes of the protein
+- train ML models on most significant classes

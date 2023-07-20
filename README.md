@@ -1,4 +1,4 @@
-# foldingML
+# trajectoryAnalysis
 Original trajectory data are available in 
  /home/pkekeneshuskey/data/molecular_dynamics/ph_binsun
  (from Bin Sun)

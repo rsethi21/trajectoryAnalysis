@@ -88,7 +88,7 @@ def GetTrajData(traj, nStruct):
 
     timeseriesContainer = dict()
     timeseriesContainer["RgSeries"] = data.tolist()
-    timeseriesContainer["RMSF"] = rmsd.tolist()
+    timeseriesContainer["RMSF"] = rmsf.tolist()
     timeseriesContainer["Salt"] = sodiumshell.values.tolist()
     timeseriesContainer["Hydration"] = watershell.values.tolist()
     timeseriesContainer["COM"] = com.tolist()
@@ -99,7 +99,7 @@ def GetTrajData(traj, nStruct):
 def doit(nStruct, mode=None, case=None):
     if "trajs3" in case:
         caseToProcess = os.path.join(case, "system_reduced_all.pdb")
-        dataSeries = "./traj3Metrics.json"
+        dataSeries = "./outdata/traj3Metrics.json"
     elif "trajs7" in case:
         caseToProcess = os.path.join(case, "system_reduced_all_MDtraj.pdb")
         dataSeries = "./data/traj7Metrics.json"
@@ -116,7 +116,7 @@ def doit(nStruct, mode=None, case=None):
 
         ## saving series data
 
-        with concurrent.futures.ProcessPoolExecutor(max_workers=15) as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=25) as executor:
             indices = [i for i in range(1, nStruct + 1)]
             results = executor.map(GetTrajData, repeat(traj), indices)
 

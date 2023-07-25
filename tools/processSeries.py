@@ -20,7 +20,7 @@ parser.add_argument("-n", "--number", help="number of structures", required=True
 parser.add_argument("-w", "--workers", help="workers for multithreading", required=False, default=4)
 parser.add_argument("-i", "--ion", help="mask of ions for salt mask", required=False, default=None)
 parser.add_argument("-t", "--hydration", help="mask of hydration for water mask", required=False, default=None)
-parser.add_argument("-l", "--label", help="extra labels to add to title of outfile", required=False, default=None)
+parser.add_argument("-a", "--label", help="extra labels to add to title of outfile", required=False, default=None)
 
 d = {
     "CYS": "C",

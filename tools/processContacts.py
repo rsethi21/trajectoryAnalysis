@@ -81,8 +81,8 @@ def GetTrajData(traj, nStruct, protLen, path, distance):
 def doit(nStruct, protLen, case, outpath, distance):
     
     print("Generating data from trajs")
-    nStructPossible, traj = LoadTraj(caseToProcess)
-    nStruct = np.min([nStruct, nStructPossible])
+    nStructPossible, traj = LoadTraj(case)
+    nStruct = min(nStruct, nStructPossible)
     print(f"Processing {nStruct} out of {nStructPossible}")
 
     GetTrajData(traj, nStruct, protLen, outpath, distance)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     nStruct = args.number
 
     start = time.perf_counter()
-    doit(nStruct, protLen, args.file, args.outpath, args.distance)
+    doit(int(nStruct), int(protLen), args.file, args.outpath, float(args.distance))
     end = time.perf_counter()
     
     print(f"Time to run = {end-start}")

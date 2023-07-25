@@ -20,7 +20,7 @@ parser.add_argument("-n", "--number", help="number of structures", required=True
 parser.add_argument("-w", "--workers", help="workers for multithreading", required=False, default=4)
 parser.add_argument("-i", "--ion", help="mask of ions for salt mask", required=False, default=None)
 parser.add_argument("-t", "--hydration", help="mask of hydration for water mask", required=False, default=None)
-
+parser.add_argument("-l", "--label", help="extra labels to add to title of outfile", required=False, default=None)
 
 d = {
     "CYS": "C",
@@ -77,7 +77,7 @@ def GetTrajData(traj, nStruct, protLen, ionMask, waterMask):
 
     ## compute rmsd to ref first frame
 
-    rmsf = pt.rmsf(traj, mask=mask)
+    rmsf = pt.rmsf(traj, mask=mask, options="byres")
 
     ## compute number of sodium ions in solvation layers
 
@@ -98,18 +98,21 @@ def GetTrajData(traj, nStruct, protLen, ionMask, waterMask):
     return timeseriesContainer
 
 
-def doit(nStruct, protLen, inputFile, outpath, ionMask, waterMask, workers):
+def doit(nStruct, protLen, inputFile, outpath, ionMask, waterMask, workers, label):
     
-    dataSeries = os.path.join(outpath, "trajMetrics.json")
+    if label != None:
+        dataSeries = os.path.join(outpath, f"trajMetrics_{label}.json")
+    else:
+        dataSeries = os.path.join(outpath, "trajMetrics.json")
 
     print("Generating data from trajs")
-    nStructPossible, traj = LoadTraj(caseToProcess)
-    nStruct = np.min([nStruct, nStructPossible])
+    nStructPossible, traj = LoadTraj(inputFile)
+    nStruct = min(nStruct, nStructPossible)
     print(f"Processing {nStruct} out of {nStructPossible}")
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as executor:
         indices = [i for i in range(1, nStruct + 1)]
-        results = executor.map(GetTrajData, repeat(traj), indices)
+        results = executor.map(GetTrajData, repeat(traj), indices, repeat(protLen), repeat(ionMask), repeat(waterMask))
 
     seriesData = [result for result in results]
 
@@ -122,7 +125,9 @@ if __name__ == "__main__":
     args = parser.parse_args()        
 
     start = time.perf_counter()
-    doit(args.number, args.length, args.file, args.outpath, args.ion, args.hydration, args.workers)
+    if args.workers != None:
+        workers = int(args.workers)
+    doit(int(args.number), int(args.length), args.file, args.outpath, args.ion, args.hydration, workers, args.label)
     end = time.perf_counter()
 
     print(f"Time to run = {end-start}")
